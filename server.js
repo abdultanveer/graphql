@@ -8,9 +8,12 @@ var schema = buildSchema(`
    type Query {
     rollDice(numDice: Int!, numSides: Int): [Int]
     hello: String
-
+    quoteOfTheDay:String
+    random:Float
   }
 `);
+
+
 
 // The root provides a resolver function for each API endpoint
 var root = {
@@ -25,6 +28,9 @@ var root = {
   hello() {
     return "Hello world!";
   },
+  quoteOfTheDay: ()=>'take it easy',
+  random: ()=> Math.random()
+
 };
 
 var app = express();
