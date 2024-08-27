@@ -5,15 +5,22 @@ var { buildSchema } = require("graphql");
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
 
+ 
+
    type Query {
     rollDice(numDice: Int!, numSides: Int): [Int]
     hello: String
     quoteOfTheDay:String
     random:Float
+    getMessage:String
+
   }
+    type Mutation{
+      setMessage(message: String):String
+    }
 `);
 
-
+let message = "hello ascendion"
 
 // The root provides a resolver function for each API endpoint
 var root = {
@@ -25,11 +32,17 @@ var root = {
     return output;
   },
 
+
   hello() {
     return "Hello world!";
   },
   quoteOfTheDay: ()=>'take it easy',
-  random: ()=> Math.random()
+  random: ()=> Math.random(),
+  getMessage: () => message,
+  setMessage: ({message:newMessage}) =>{
+    message = newMessage;
+    return message;
+  }
 
 };
 
