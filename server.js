@@ -13,14 +13,24 @@ var schema = buildSchema(`
     quoteOfTheDay:String
     random:Float
     getMessage:String
-
+    getBooks:[Book]
   }
+
+    type Book{
+    title:String
+    author:String
+    }
     type Mutation{
       setMessage(message: String):String
     }
 `);
 
-let message = "hello ascendion"
+let message = "hello ascendion";
+const books = [
+  {title: 'let us c', author:'kanetkar'},
+  {title: 'let us c++', author:'yash kanetkar'},
+
+]
 
 // The root provides a resolver function for each API endpoint
 var root = {
@@ -31,19 +41,17 @@ var root = {
     }
     return output;
   },
-
-
+  getBooks: ()=> books,
   hello() {
     return "Hello world!";
   },
-  quoteOfTheDay: ()=>'take it easy',
-  random: ()=> Math.random(),
+  quoteOfTheDay: () => "take it easy",
+  random: () => Math.random(),
   getMessage: () => message,
-  setMessage: ({message:newMessage}) =>{
+  setMessage: ({ message: newMessage }) => {
     message = newMessage;
     return message;
-  }
-
+  },
 };
 
 var app = express();
