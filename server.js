@@ -1,7 +1,8 @@
 var express = require("express");
 var { createHandler } = require("graphql-http/lib/use/express");
 var { buildSchema } = require("graphql");
-
+//var {booksCollectionPromise} = require('./mongoDb')
+ //npm install mongodb 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
 
@@ -22,6 +23,8 @@ var schema = buildSchema(`
     }
     type Mutation{
       setMessage(message: String):String
+      addBook(title: String!, author: String!): Book
+
     }
 `);
 
@@ -41,7 +44,7 @@ var root = {
     }
     return output;
   },
-  getBooks: ()=> books,
+ // getBooks: ()=> books,
   hello() {
     return "Hello world!";
   },
@@ -52,10 +55,21 @@ var root = {
     message = newMessage;
     return message;
   },
+  getBooks: async () => {
+    const booksCollection = await booksCollectionPromise;
+    return booksCollection.find().toArray();
+  },
+  addBook: async ({ title, author }) => {
+    const booksCollection = await booksCollectionPromise;
+    const newBook = { title, author };
+    await booksCollection.insertOne(newBook);
+    return newBook;
+  },
 };
 
 var app = express();
 var { ruruHTML } = require("ruru/server");
+const { booksCollectionPromise } = require("./mongoDb");
 
 // Create and use the GraphQL handler.
 app.all(
